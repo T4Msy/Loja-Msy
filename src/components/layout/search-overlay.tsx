@@ -66,7 +66,7 @@ export function SearchOverlay({ open, onClose }: Props) {
 
             <div className="mt-8 grid gap-2">
               {results.length === 0 && q.length > 1 && (
-                <p className="text-fg-muted text-sm">Nada encontrado para "{q}".</p>
+                <p className="text-fg-muted text-sm">Nada encontrado para &ldquo;{q}&rdquo;.</p>
               )}
               {results.length === 0 && q.length <= 1 && (
                 <div>

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Minus, Plus, ShoppingBag, Tag, Trash2, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useCart, cartTotals } from "@/store/cart";
+import { useCart } from "@/store/cart";
 import { formatBRL } from "@/lib/utils";
 import { Seal } from "@/components/brand/seal";
 
@@ -21,8 +21,8 @@ export function CartDrawer() {
   const couponCode = useCart((s) => s.couponCode);
   const applyCoupon = useCart((s) => s.applyCoupon);
 
-  const { subtotal, itemCount } = cartTotals(useCart.getState());
   const subtotalLive = items.reduce((acc, x) => acc + x.priceCents * x.quantity, 0);
+  const itemCount = items.reduce((acc, x) => acc + x.quantity, 0);
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotalLive);
   const progress = Math.min(100, (subtotalLive / FREE_SHIPPING_THRESHOLD) * 100);
 

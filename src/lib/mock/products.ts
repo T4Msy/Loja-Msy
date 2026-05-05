@@ -3,7 +3,7 @@ import type { Product, Size, Variant } from "@/lib/types";
 const sizes: Size[] = ["P", "M", "G", "GG"];
 
 function makeVariants(sku: string, stockMap: Record<Size, number>): Variant[] {
-  return sizes.map((size, i) => ({
+  return sizes.map((size) => ({
     id: `${sku}-${size}`,
     size,
     sku: `${sku}-${size}`,

@@ -74,7 +74,7 @@ export function DropFeature() {
 
             {/* Bottom-right tagline */}
             <p className="absolute bottom-6 left-6 right-6 display italic text-2xl md:text-3xl text-bone leading-tight">
-              "{drop.tagline}"
+              &ldquo;{drop.tagline}&rdquo;
             </p>
 
             <Link

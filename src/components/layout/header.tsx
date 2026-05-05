@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, Search, ShoppingBag, User } from "lucide-react";
 import { Wordmark } from "@/components/brand/seal";
-import { useCart, cartTotals } from "@/store/cart";
+import { useCart } from "@/store/cart";
 import { cn } from "@/lib/utils";
 import { MobileMenu } from "./mobile-menu";
 import { SearchOverlay } from "./search-overlay";

@@ -80,10 +80,18 @@ export function Footer() {
               Membros da Ordem têm acesso 24h antes ao próximo capítulo. Sem spam. Sem ruído.
             </p>
           </div>
-          <form className="flex flex-col justify-center gap-4 lg:items-end" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col justify-center gap-4 lg:items-end" onSubmit={async (e) => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            const email = fd.get("email") as string;
+            if (!email) return;
+            try {
+              await fetch("/api/newsletter", { method: "POST", body: JSON.stringify({ email }), headers: { "Content-Type": "application/json" } });
+            } catch {}
+          }}>
             <div className="flex w-full max-w-lg items-end gap-3">
               <div className="flex-1">
-                <Input placeholder="seu@email.com" type="email" required className="h-14 text-lg" />
+                <Input name="email" placeholder="seu@email.com" type="email" required className="h-14 text-lg" />
               </div>
               <Button type="submit" size="lg" className="h-14">
                 <span>Jurar</span>

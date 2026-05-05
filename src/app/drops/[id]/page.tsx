@@ -82,7 +82,7 @@ export default async function DropPage({
               {drop.name}
             </h1>
             <p className="mt-6 italic display text-2xl md:text-3xl text-fg max-w-xl">
-              "{drop.tagline}"
+              &ldquo;{drop.tagline}&rdquo;
             </p>
           </div>
 

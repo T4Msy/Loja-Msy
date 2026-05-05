@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Seal } from "@/components/brand/seal";
-import { Countdown } from "./countdown";
 import type { Drop } from "@/lib/types";
 import { cn, formatDateBR } from "@/lib/utils";
 
@@ -76,7 +75,7 @@ export function DropCard({ drop, index = 0, large = false }: Props) {
             </p>
             {large && (
               <p className="mt-3 italic text-fg-muted text-lg max-w-md">
-                "{drop.tagline}"
+                &ldquo;{drop.tagline}&rdquo;
               </p>
             )}
           </div>

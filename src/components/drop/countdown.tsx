@@ -27,12 +27,6 @@ export function Countdown({ target, size = "md" }: Props) {
     return () => clearInterval(id);
   }, [target]);
 
-  const sizes = {
-    sm: { num: "text-2xl", lbl: "text-[9px]" },
-    md: { num: "text-4xl md:text-5xl", lbl: "text-[10px]" },
-    lg: { num: "text-6xl md:text-8xl", lbl: "text-xs" },
-  } as const;
-
   if (t.ended) {
     return (
       <p className="seal text-3xl md:text-4xl text-blood">完売 · ENCERRADO</p>

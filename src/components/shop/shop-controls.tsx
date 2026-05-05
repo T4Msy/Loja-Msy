@@ -1,8 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { LayoutGrid, Rows3, ChevronDown } from "lucide-react";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,

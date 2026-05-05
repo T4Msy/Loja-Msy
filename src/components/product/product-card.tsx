@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
 import { cn, formatBRL, padNumber } from "@/lib/utils";
-import { Eye, ShoppingBag } from "lucide-react";
+import { Eye } from "lucide-react";
 
 type Props = {
   product: Product;

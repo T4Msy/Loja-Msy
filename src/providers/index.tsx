@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type PropsWithChildren } from "react";
+import { useState, useEffect, type PropsWithChildren } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import { useAuth } from "@/store/auth";
 
 export function Providers({ children }: PropsWithChildren) {
   const [client] = useState(
@@ -17,8 +18,10 @@ export function Providers({ children }: PropsWithChildren) {
         },
       })
   );
+
   return (
     <QueryClientProvider client={client}>
+      <AuthInitializer />
       {children}
       <Toaster
         theme="dark"
@@ -33,4 +36,10 @@ export function Providers({ children }: PropsWithChildren) {
       />
     </QueryClientProvider>
   );
+}
+
+function AuthInitializer() {
+  const init = useAuth((s) => s.init);
+  useEffect(() => { init(); }, [init]);
+  return null;
 }

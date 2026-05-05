@@ -17,7 +17,7 @@ export default function ShopPage() {
     if (category !== "all") list = list.filter((p) => p.category === category);
     if (sort === "price-asc") list.sort((a, b) => a.priceCents - b.priceCents);
     if (sort === "price-desc") list.sort((a, b) => b.priceCents - a.priceCents);
-    if (sort === "newest")
+    if (sort === "newest" || sort === "popular")
       list.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
     return list;
   }, [category, sort]);

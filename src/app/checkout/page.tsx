@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, CreditCard, Lock, Truck, ShoppingBag } from "lucide-react";
+import { ArrowLeft, CreditCard, Lock, Truck, ShoppingBag } from "lucide-react";
 import { useCart } from "@/store/cart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
