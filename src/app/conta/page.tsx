@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/store/auth";
 import { useCart } from "@/store/cart";
 import { formatDateBR } from "@/lib/utils";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 export default function ContaPage() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function ContaPage() {
   }, [init]);
 
   useEffect(() => {
-    if (initialized && !user) {
+    if (initialized && !user && isSupabaseConfigured) {
       router.push("/login");
     }
   }, [initialized, user, router]);
@@ -34,9 +35,13 @@ export default function ContaPage() {
     );
   }
 
-  if (!user) return null;
+  if (!user && isSupabaseConfigured) return null;
 
-  const initials = (profile?.fullName || user.email || "M")
+  // Demo mode: show account page even without real auth
+  const demoUser = user || { email: "demo@masayoshi.store", created_at: new Date().toISOString() };
+  const demoProfile = profile || { fullName: "Membro da Ordem", phone: null, role: "user", createdAt: new Date().toISOString() };
+
+  const initials = (demoProfile.fullName || demoUser.email || "M")
     .split(" ")
     .map((w) => w[0])
     .join("")
@@ -50,14 +55,19 @@ export default function ContaPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="flex items-start justify-between gap-6 flex-wrap mb-12">
+        {!isSupabaseConfigured && (
+            <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-gold border border-gold/30 bg-gold/5 p-4">
+              Modo demonstração — Dados de exemplo. Configure o Supabase para autenticação real.
+            </div>
+          )}
+          <div className="flex items-start justify-between gap-6 flex-wrap mb-12">
           <div>
             <p className="label-tag mb-4 text-blood">Membro da Ordem</p>
             <h1 className="display text-5xl md:text-7xl text-bone leading-[0.95]">
               Minha conta
             </h1>
             <p className="mt-4 text-fg-muted">
-              {profile?.fullName || user.email}
+              {demoProfile.fullName || (demoUser as any).email}
             </p>
           </div>
 
@@ -66,10 +76,10 @@ export default function ContaPage() {
               {initials}
             </div>
             <div>
-              <p className="text-bone font-medium">{profile?.fullName || "Membro"}</p>
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-fg-muted">{user.email}</p>
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-fg-subtle mt-1">
-                Membro desde {formatDateBR(profile?.createdAt || user.created_at)}
+              <p className="text-bone font-medium">{demoProfile.fullName}</p>
+<p className="font-mono text-[10px] uppercase tracking-[0.24em] text-fg-muted">{(demoUser as any).email}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-fg-subtle mt-1">
+                  Membro desde {formatDateBR(demoProfile.createdAt || (demoUser as any).created_at)}
               </p>
             </div>
           </div>
@@ -84,10 +94,10 @@ export default function ContaPage() {
         <div className="mt-12 border-t border-line pt-8">
           <p className="label-tag mb-6">Dados da conta</p>
           <div className="grid gap-4 md:grid-cols-2">
-            <InfoRow label="Nome" value={profile?.fullName || "—"} />
-            <InfoRow label="E-mail" value={user.email || "—"} />
-            <InfoRow label="Telefone" value={profile?.phone || "—"} />
-            <InfoRow label="Cargo" value={profile?.role === "admin" ? "Administrador" : "Membro"} />
+            <InfoRow label="Nome" value={demoProfile.fullName || "—"} />
+            <InfoRow label="E-mail" value={(demoUser as any).email || "—"} />
+            <InfoRow label="Telefone" value={demoProfile.phone || "—"} />
+            <InfoRow label="Cargo" value={demoProfile.role === "admin" ? "Administrador" : "Membro"} />
           </div>
         </div>
 
@@ -102,7 +112,7 @@ export default function ContaPage() {
             <LogOut className="h-4 w-4" />
             Sair da conta
           </Button>
-          {profile?.role === "admin" && (
+          {demoProfile.role === "admin" && (
             <Button asChild variant="secondary">
               <Link href="/admin">
                 <ArrowRight className="h-4 w-4" />

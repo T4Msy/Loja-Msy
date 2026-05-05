@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Seal } from "@/components/brand/seal";
 import { Package, Layers, ShoppingBag, LayoutDashboard, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/store/auth";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -18,15 +19,15 @@ const nav = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, profile, initialized, init } = useAuth();
+  const { user, initialized, init } = useAuth();
 
   useEffect(() => { init(); }, [init]);
 
   useEffect(() => {
-    if (initialized && (!user || profile?.role !== "admin")) {
+    if (initialized && isSupabaseConfigured && !user) {
       router.push("/login?redirect=/admin");
     }
-  }, [initialized, user, profile, router]);
+  }, [initialized, user, router]);
 
   if (!initialized) {
     return (
@@ -36,7 +37,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (!user || profile?.role !== "admin") return null;
+  // In demo mode (no Supabase), allow admin access
+  if (isSupabaseConfigured && !user) return null;
 
   return (
     <div className="flex min-h-screen bg-bg">

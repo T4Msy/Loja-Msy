@@ -1,7 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { isSupabaseConfigured } from "./env";
 
 export async function createClient() {
+  if (!isSupabaseConfigured) {
+    throw new Error("Supabase not configured");
+  }
+
   const cookieStore = await cookies();
 
   return createServerClient(
@@ -18,7 +23,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // setAll is called from Server Components, which cannot set cookies
+            // setAll called from Server Components which cannot set cookies
           }
         },
       },

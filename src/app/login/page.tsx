@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/store/auth";
 import { site } from "@/lib/site";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 function LoginForm() {
   const router = useRouter();
@@ -57,6 +58,11 @@ function LoginForm() {
           <Seal variant="full" size={80} className="mx-auto text-blood" />
           <h1 className="display text-4xl mt-6 text-bone">Entrar na Ordem</h1>
           <p className="mt-3 text-fg-muted">Acesso exclusivo para membros.</p>
+          {!isSupabaseConfigured && (
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.24em] text-gold border border-gold/30 bg-gold/5 p-3">
+              Modo demonstração — Configure o Supabase para autenticação real
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
