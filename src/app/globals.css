@@ -1,0 +1,305 @@
+@import "tailwindcss";
+
+/* ─── Theme ─ Masayoshi ───────────────────────────────────────────────────── */
+@theme {
+  /* Brand surface — deep void */
+  --color-bg: #050505;
+  --color-bg-2: #0a0a0a;
+  --color-bg-3: #111111;
+  --color-bg-elev: #161616;
+
+  /* Lines & dividers */
+  --color-line: #1a1a1a;
+  --color-line-2: #242424;
+  --color-line-3: #2e2e2e;
+
+  /* Text scale */
+  --color-bone: #f5f5f5;
+  --color-fg: #ededed;
+  --color-fg-muted: #a3a3a3;
+  --color-fg-subtle: #6b6b6b;
+  --color-fg-faint: #404040;
+
+  /* Blood — the order's signature */
+  --color-blood: #b91c1c;
+  --color-blood-2: #991b1b;
+  --color-blood-3: #7f1d1d;
+  --color-blood-4: #450a0a;
+  --color-blood-glow: rgba(185, 28, 28, 0.35);
+
+  /* Metallics */
+  --color-iron: #2a2a2a;
+  --color-silver: #9ca3af;
+  --color-gold: #b08d57;
+
+  /* Fonts (next/font CSS vars) */
+  --font-sans: var(--font-sans-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-cormorant), "Times New Roman", serif;
+  --font-jp: var(--font-jp-noto), "Noto Serif JP", serif;
+  --font-mono: var(--font-mono-jet), ui-monospace, monospace;
+
+  /* Radii — tight, architectural */
+  --radius: 2px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* Easings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-soft: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Animations */
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-marquee-rev: marquee-reverse 28s linear infinite;
+  --animate-scan: scan 6s linear infinite;
+  --animate-pulse-blood: pulse-blood 4s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.6s var(--ease-out-expo) both;
+  --animate-rise: rise 0.8s var(--ease-out-expo) both;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+@keyframes scan {
+  0%, 100% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 0.4; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+@keyframes pulse-blood {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.04); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Base layer ─────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-line);
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    background: var(--color-bg);
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-blood);
+    color: var(--color-bone);
+  }
+
+  /* Scrollbar — discreet, masayoshi */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-2);
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-blood-3); }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+
+  /* Focus ring — premium, never default blue */
+  :focus-visible {
+    outline: 1px solid var(--color-blood);
+    outline-offset: 2px;
+  }
+}
+
+/* ─── Utilities (Masayoshi-specific) ─────────────────────────────────────── */
+@utility text-balance { text-wrap: balance; }
+@utility text-pretty { text-wrap: pretty; }
+
+@utility container-edge {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  max-width: 1600px;
+}
+@media (min-width: 768px) {
+  .container-edge { padding-inline: 2.5rem; }
+}
+@media (min-width: 1280px) {
+  .container-edge { padding-inline: 4rem; }
+}
+
+@utility glass {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid var(--color-line);
+}
+@utility glass-blood {
+  background: linear-gradient(
+    to bottom,
+    rgba(185, 28, 28, 0.08),
+    rgba(10, 10, 10, 0.6) 40%
+  );
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+@utility grain {
+  position: relative;
+}
+@utility grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+}
+
+@utility tracking-mega { letter-spacing: 0.42em; }
+
+@utility text-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+@utility hairline {
+  background-image: linear-gradient(to right, transparent, var(--color-line-2), transparent);
+  height: 1px;
+}
+
+@utility blood-gradient {
+  background: radial-gradient(
+    ellipse at center,
+    var(--color-blood) 0%,
+    var(--color-blood-3) 40%,
+    transparent 70%
+  );
+}
+
+@utility shadow-blood {
+  box-shadow: 0 0 0 1px var(--color-line),
+              0 20px 60px -20px rgba(185, 28, 28, 0.5),
+              0 0 80px -40px rgba(185, 28, 28, 0.4);
+}
+
+/* ─── Reusable component patterns ────────────────────────────────────────── */
+@layer components {
+  .seal {
+    font-family: var(--font-jp);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+  }
+
+  .label-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-bone);
+    background: var(--color-blood-3);
+    border: 1px solid var(--color-blood-2);
+    transition: all 320ms var(--ease-out-expo);
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.12) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 600ms var(--ease-out-expo);
+  }
+  .btn-primary:hover { background: var(--color-blood-2); border-color: var(--color-blood); }
+  .btn-primary:hover::before { transform: translateX(100%); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-bone);
+    background: transparent;
+    border: 1px solid var(--color-line-2);
+    transition: all 320ms var(--ease-out-expo);
+  }
+  .btn-ghost:hover { border-color: var(--color-blood); color: var(--color-bone); }
+
+  .ring-frame {
+    position: relative;
+  }
+  .ring-frame::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--color-line-2);
+    pointer-events: none;
+  }
+}
+
+/* ─── Print / motion preferences ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
