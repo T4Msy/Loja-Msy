@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ChevronDown, Minus, Plus, ShoppingBag, ShieldCheck, Truck, RotateCcw, Lock } from "lucide-react";
 import { toast } from "sonner";
@@ -17,6 +18,7 @@ import type { Product } from "@/lib/types";
 type Props = { product: Product };
 
 export function ProductDetail({ product }: Props) {
+  const router = useRouter();
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
   const addItem = useCart((s) => s.addItem);
@@ -34,7 +36,7 @@ export function ProductDetail({ product }: Props) {
   const handleAdd = () => {
     if (!selectedVariant) {
       toast.error("Escolha um tamanho", { description: "A Ordem exige precisão." });
-      return;
+      return false;
     }
     addItem({
       productId: product.id,
@@ -51,6 +53,12 @@ export function ProductDetail({ product }: Props) {
     toast.success("Adicionado à sacola", {
       description: `${product.name} · Tamanho ${selectedVariant.size}`,
     });
+    return true;
+  };
+
+  const handleBuyNow = () => {
+    if (!handleAdd()) return;
+    router.push("/checkout");
   };
 
   return (
@@ -151,9 +159,13 @@ export function ProductDetail({ product }: Props) {
                 selected={selectedVariantId}
                 onSelect={setSelectedVariantId}
               />
-              {selectedVariant && (
+              {selectedVariant ? (
                 <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.32em] text-blood">
                   {selectedVariant.stock} {selectedVariant.stock === 1 ? "unidade" : "unidades"} disponíveis
+                </p>
+              ) : (
+                <p className="mt-3 text-sm text-bone">
+                  Selecione um tamanho para liberar a compra.
                 </p>
               )}
             </div>
@@ -193,8 +205,8 @@ export function ProductDetail({ product }: Props) {
                     {selectedVariant ? "Adicionar ao carrinho" : "Escolha um tamanho"}
                   </Button>
                 </div>
-                <Button asChild size="lg" variant="bone" className="w-full h-14">
-                  <Link href="/checkout">Comprar agora</Link>
+                <Button size="lg" variant="bone" className="w-full h-14" disabled={!selectedVariant} onClick={handleBuyNow}>
+                  Comprar agora
                 </Button>
               </div>
             )}

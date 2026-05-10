@@ -4,9 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { ArrowRight, ArrowDown } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Seal } from "@/components/brand/seal";
-import { site } from "@/lib/site";
 import { currentDrop } from "@/lib/mock/drops";
 
 export function Hero() {
@@ -15,163 +14,155 @@ export function Hero() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
     <section
       ref={ref}
-      className="relative min-h-[100svh] w-full overflow-hidden bg-bg"
-      aria-label="Apresentação Masayoshi"
+      className="relative min-h-[100svh] overflow-hidden bg-bg"
+      aria-label="Masayoshi hero"
     >
-      {/* Background image with parallax */}
-      <motion.div
-        style={{ y, scale }}
-        className="absolute inset-0 z-0"
-      >
+      <motion.div style={{ y, scale }} className="absolute inset-0">
         <Image
           src={currentDrop.cover}
-          alt=""
+          alt="Coleção Masayoshi"
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-50"
+          className="object-cover opacity-45"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg/30 via-bg/55 to-bg" />
-        <div className="absolute inset-0 bg-gradient-to-r from-bg/70 via-transparent to-bg/70" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(185,28,28,0.22),transparent_24%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg/20 via-bg/55 to-bg" />
+        <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/35 to-bg/85" />
       </motion.div>
 
-      {/* Grain overlay */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] opacity-[0.06] mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")",
-          backgroundSize: "200px 200px",
-        }}
-      />
-
-      {/* Massive kanji */}
       <motion.div
         style={{ opacity }}
-        className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center"
         aria-hidden
       >
-        <span className="seal text-[clamp(20rem,42vw,44rem)] leading-none text-blood/[0.07] select-none">
+        <span className="seal text-[clamp(18rem,38vw,42rem)] leading-none text-blood/[0.08] select-none">
           正義
         </span>
       </motion.div>
 
-      {/* Vertical lines */}
-      <div aria-hidden className="absolute inset-y-0 left-8 w-px bg-line-2 z-[2] hidden md:block" />
-      <div aria-hidden className="absolute inset-y-0 right-8 w-px bg-line-2 z-[2] hidden md:block" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,transparent,rgba(255,255,255,0.03),transparent)] [background-size:32rem_100%] opacity-40" />
 
-      {/* Top frame info */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 container-edge pt-12 md:pt-16 flex items-start justify-between gap-6"
-      >
-        <div className="flex items-center gap-3">
-          <Seal variant="full" size={56} className="text-bone opacity-90" />
-          <div>
-            <p className="label-tag">Capítulo</p>
-            <p className="font-mono text-sm text-bone">{currentDrop.code}</p>
-          </div>
-        </div>
-        <div className="hidden md:block text-right">
-          <p className="label-tag">Latitude</p>
-          <p className="font-mono text-sm text-bone">23°33′S · 46°38′W</p>
-        </div>
-      </motion.div>
-
-      {/* Content */}
-      <div className="relative z-10 container-edge flex min-h-[calc(100svh-200px)] flex-col justify-end pb-24 md:pb-32">
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="label-tag text-blood"
-        >
-          Drop ao vivo · Numeração limitada
-        </motion.p>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="display mt-4 text-[clamp(3rem,11vw,12rem)] leading-[0.86] tracking-[-0.04em] text-bone"
-        >
-          A ordem
-          <br />
-          <span className="italic font-light text-fg">não pede</span>
-          <br />
-          <span className="text-blood">licença.</span>
-        </motion.h1>
-
+      <div className="relative z-10 container-edge flex min-h-[100svh] flex-col justify-between py-8 md:py-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
-          className="mt-10 grid gap-8 md:grid-cols-[1.2fr_auto] md:items-end"
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center justify-between gap-4"
         >
-          <p className="max-w-xl text-pretty text-base md:text-lg text-fg-muted leading-relaxed">
-            Drops limitados, costuras juradas. <span className="text-bone">{currentDrop.name}</span> está ao vivo —
-            cada peça vem numerada, lacrada com selo da Ordem. Quem entende, não fala. Veste.
-          </p>
-
-          <div className="flex flex-col items-start gap-4 md:items-end">
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href={`/drops/${currentDrop.id}`}
-                className="btn-primary"
-              >
-                Entrar no drop <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/manifesto"
-                className="btn-ghost"
-              >
-                Ler o manifesto
-              </Link>
-            </div>
+          <div className="glass-1 surface-elev-1 rounded-full px-4 py-2 font-mono text-[10px] uppercase tracking-[0.32em] text-fg-muted">
+            Drop ao vivo · {currentDrop.code}
+          </div>
+          <div className="hidden items-center gap-3 rounded-full border border-white/10 bg-white/4 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted md:inline-flex">
+            <Sparkles className="h-3.5 w-3.5 text-blood" />
+            peças numeradas · sem reposição
           </div>
         </motion.div>
-      </div>
 
-      {/* Bottom strip */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
-        className="absolute bottom-6 inset-x-0 z-10 container-edge flex items-end justify-between text-fg-muted"
-      >
-        <div className="flex items-center gap-3">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping bg-blood opacity-75" />
-            <span className="relative inline-flex h-2 w-2 bg-blood" />
-          </span>
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em]">
-            Ao vivo · {currentDrop.totalUnits} unidades
-          </p>
+        <div className="grid gap-12 py-14 md:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+              className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/4 px-4 py-2"
+            >
+              <Seal variant="mark" size={18} className="text-blood" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-fg-muted">
+                Coleção limitada para quem carrega a MSY no peito
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+              className="display mt-8 max-w-5xl text-[clamp(3.6rem,10vw,9rem)] leading-[0.84] tracking-[-0.05em] text-bone"
+            >
+              Vista o símbolo.
+              <br />
+              <span className="italic text-fg">Carregue a ordem.</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.8 }}
+              className="mt-8 max-w-2xl text-base leading-relaxed text-fg-muted md:text-lg"
+            >
+              A Masayoshi transforma camiseta em identidade, presença e ascensão. Peças pesadas, numeradas e lançadas em capítulos curtos para quem prefere ser reconhecido sem pedir espaço.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.75 }}
+              className="mt-10 flex flex-col gap-3 sm:flex-row"
+            >
+              <Link href="/shop" className="btn-primary min-w-[220px]">
+                Comprar coleção
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href={`/drops/${currentDrop.id}`} className="btn-ghost min-w-[220px]">
+                Entrar no {currentDrop.code}
+              </Link>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="panel-strong surface-elev-3 gradient-stroke rounded-[32px] p-6 md:p-8"
+          >
+            <p className="section-kicker">Convocação</p>
+            <h2 className="display mt-5 text-3xl leading-[0.96] text-bone md:text-5xl">
+              Mais que tecido.
+              <br />
+              Uma marca de pertencimento.
+            </h2>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <Meta label="Capítulo ativo" value={currentDrop.name} />
+              <Meta label="Tiragem total" value={`${currentDrop.totalUnits} unidades`} />
+              <Meta label="Assinatura" value="malha pesada · acabamento premium" />
+              <Meta label="Código" value="lealdade · justiça · liberdade" />
+            </div>
+          </motion.div>
         </div>
-        <button
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
-          className="hidden md:inline-flex flex-col items-center gap-2 group"
-          aria-label="Rolar para ver mais"
+
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.75 }}
+          className="grid gap-3 md:grid-cols-3"
         >
-          <span className="font-mono text-[10px] uppercase tracking-[0.32em] group-hover:text-bone transition-colors">
-            Descer
-          </span>
-          <ArrowDown className="h-4 w-4 group-hover:translate-y-1 group-hover:text-bone transition-all" />
-        </button>
-        <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-right">
-          {site.kanji} · Ordem n° {site.ordemNumero}
-        </p>
-      </motion.div>
+          {[
+            "Drops curtos para aumentar desejo, não ruído.",
+            "Peças construídas para parecer arquivo desde o primeiro uso.",
+            "Uma loja para quem quer status sem estética genérica.",
+          ].map((item) => (
+            <div key={item} className="glass-1 rounded-[22px] px-5 py-4 text-sm leading-relaxed text-fg-muted">
+              {item}
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </section>
+  );
+}
+
+function Meta({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4">
+      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted">{label}</p>
+      <p className="mt-3 text-sm leading-relaxed text-bone">{value}</p>
+    </div>
   );
 }

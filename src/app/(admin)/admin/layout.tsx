@@ -19,15 +19,27 @@ const nav = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, initialized, init } = useAuth();
+  const { user, profile, initialized, init } = useAuth();
 
   useEffect(() => { init(); }, [init]);
 
   useEffect(() => {
-    if (initialized && isSupabaseConfigured && !user) {
-      router.push("/login?redirect=/admin");
+    if (!initialized) return;
+
+    if (!isSupabaseConfigured) {
+      router.push("/login");
+      return;
     }
-  }, [initialized, user, router]);
+
+    if (!user) {
+      router.push("/login?redirect=/admin");
+      return;
+    }
+
+    if (profile?.role !== "admin") {
+      router.push("/");
+    }
+  }, [initialized, user, profile, router]);
 
   if (!initialized) {
     return (
@@ -37,8 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // In demo mode (no Supabase), allow admin access
-  if (isSupabaseConfigured && !user) return null;
+  if (!isSupabaseConfigured || !user || profile?.role !== "admin") return null;
 
   return (
     <div className="flex min-h-screen bg-bg">

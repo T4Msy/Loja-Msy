@@ -10,10 +10,10 @@ import {
 import { cn } from "@/lib/utils";
 
 const sortOptions = [
-  { value: "newest", label: "Mais recentes" },
+  { value: "newest", label: "Lançamentos" },
   { value: "price-asc", label: "Preço · ↑" },
   { value: "price-desc", label: "Preço · ↓" },
-  { value: "popular", label: "Mais procurados" },
+  { value: "popular", label: "Mais desejados" },
 ];
 
 const categoryFilters = [
@@ -47,71 +47,71 @@ export function ShopControls({
   setDensity,
 }: Props) {
   return (
-    <div className="sticky top-[68px] z-30 bg-bg/85 backdrop-blur-xl border-b border-line">
+    <div className="sticky top-[68px] z-30 border-b border-white/8 bg-bg/75 backdrop-blur-2xl">
       <div className="container-edge py-4">
-        <div className="flex flex-wrap items-center gap-3 md:gap-6">
-          {/* Categories — horizontal scroll on mobile */}
-          <div className="flex-1 -mx-4 px-4 overflow-x-auto scrollbar-hide">
-            <div className="flex items-center gap-2">
-              {categoryFilters.map((c) => (
+        <div className="panel-premium rounded-[28px] px-4 py-4 md:px-5">
+          <div className="flex flex-wrap items-center gap-3 md:gap-4">
+            <div className="flex-1 -mx-2 overflow-x-auto px-2 scrollbar-hide">
+              <div className="flex items-center gap-2">
+                {categoryFilters.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => setCategory(c.value)}
+                    className={cn(
+                      "shrink-0 rounded-full px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] transition-all duration-300",
+                      "border",
+                      category === c.value
+                        ? "bg-blood-3 border-blood text-bone shadow-[0_16px_48px_-28px_rgba(185,28,28,0.8)]"
+                        : "border-white/8 bg-white/[0.03] text-fg-muted hover:text-bone hover:border-white/16"
+                    )}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="ml-auto flex items-center gap-2 sm:gap-3">
+              <span className="hidden rounded-full border border-white/8 bg-white/[0.03] px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted md:inline-flex">
+                {String(total).padStart(2, "0")} {total === 1 ? "peça" : "peças"}
+              </span>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex h-10 items-center gap-2 rounded-full border border-white/8 bg-white/[0.03] px-4 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted transition-colors hover:border-white/16 hover:text-bone outline-none">
+                  {sortOptions.find((s) => s.value === sort)?.label}
+                  <ChevronDown className="h-3 w-3" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-[12rem]">
+                  {sortOptions.map((s) => (
+                    <DropdownMenuItem key={s.value} onClick={() => setSort(s.value)}>
+                      {s.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <div className="inline-flex items-center overflow-hidden rounded-full border border-white/8 bg-white/[0.03]">
                 <button
-                  key={c.value}
-                  onClick={() => setCategory(c.value)}
+                  onClick={() => setDensity("compact")}
+                  aria-label="Grade densa"
                   className={cn(
-                    "shrink-0 h-9 px-4 font-mono text-[10px] uppercase tracking-[0.28em] transition-all duration-300",
-                    "border",
-                    category === c.value
-                      ? "bg-blood-3 border-blood text-bone"
-                      : "border-line-2 text-fg-muted hover:text-bone hover:border-line-3"
+                    "inline-flex h-10 w-10 items-center justify-center transition-colors",
+                    density === "compact" ? "bg-bone text-bg" : "text-fg-muted hover:text-bone"
                   )}
                 >
-                  {c.label}
+                  <LayoutGrid className="h-3.5 w-3.5" />
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Right cluster */}
-          <div className="flex items-center gap-3 ml-auto">
-            <span className="hidden md:inline-flex font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted">
-              {String(total).padStart(2, "0")} {total === 1 ? "peça" : "peças"}
-            </span>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger className="inline-flex items-center gap-2 h-9 px-4 border border-line-2 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted hover:text-bone hover:border-line-3 transition-colors outline-none">
-                {sortOptions.find((s) => s.value === sort)?.label}
-                <ChevronDown className="h-3 w-3" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[12rem]">
-                {sortOptions.map((s) => (
-                  <DropdownMenuItem key={s.value} onClick={() => setSort(s.value)}>
-                    {s.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <div className="hidden md:inline-flex items-center border border-line-2">
-              <button
-                onClick={() => setDensity("compact")}
-                aria-label="Grade densa"
-                className={cn(
-                  "h-9 w-9 inline-flex items-center justify-center transition-colors",
-                  density === "compact" ? "bg-bone text-bg" : "text-fg-muted hover:text-bone"
-                )}
-              >
-                <LayoutGrid className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={() => setDensity("spacious")}
-                aria-label="Grade ampla"
-                className={cn(
-                  "h-9 w-9 inline-flex items-center justify-center transition-colors",
-                  density === "spacious" ? "bg-bone text-bg" : "text-fg-muted hover:text-bone"
-                )}
-              >
-                <Rows3 className="h-3.5 w-3.5" />
-              </button>
+                <button
+                  onClick={() => setDensity("spacious")}
+                  aria-label="Grade ampla"
+                  className={cn(
+                    "inline-flex h-10 w-10 items-center justify-center transition-colors",
+                    density === "spacious" ? "bg-bone text-bg" : "text-fg-muted hover:text-bone"
+                  )}
+                >
+                  <Rows3 className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -13,6 +13,14 @@ import { useAuth } from "@/store/auth";
 import { site } from "@/lib/site";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
+function sanitizeRedirect(redirect: string | null) {
+  if (!redirect || !redirect.startsWith("/") || redirect.startsWith("//")) {
+    return "/conta";
+  }
+
+  return redirect;
+}
+
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
@@ -28,8 +36,7 @@ function LoginForm() {
 
   useEffect(() => {
     if (user) {
-      const redirect = params.get("redirect") || "/conta";
-      router.push(redirect);
+      router.push(sanitizeRedirect(params.get("redirect")));
     }
   }, [user, router, params]);
 

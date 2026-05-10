@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Minus, Plus, ShoppingBag, Tag, Trash2, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useCart } from "@/store/cart";
 import { formatBRL } from "@/lib/utils";
 import { Seal } from "@/components/brand/seal";
@@ -230,11 +231,11 @@ function CouponInput({ value, onApply }: { value: string | null; onApply: (c: st
         }}
         className="mt-3 flex gap-2"
       >
-        <input
+        <Input
           name="c"
           defaultValue={value ?? ""}
           placeholder="ORDEM10"
-          className="flex-1 h-9 bg-bg border border-line px-3 font-mono text-xs text-bone placeholder:text-fg-faint focus:border-blood outline-none"
+          className="h-9 border px-3 text-xs"
         />
         <button
           type="submit"

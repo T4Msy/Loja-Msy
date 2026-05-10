@@ -4,88 +4,64 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { currentDrop } from "@/lib/mock/drops";
+import { featuredProducts } from "@/lib/mock/products";
 
-const shots = [
-  {
-    src: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=1600&auto=format&fit=crop",
-    label: "Editorial 01",
-    h: "tall",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1600&auto=format&fit=crop",
-    label: "Editorial 02",
-    h: "short",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600&auto=format&fit=crop",
-    label: "Editorial 03",
-    h: "short",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=1600&auto=format&fit=crop",
-    label: "Editorial 04",
-    h: "tall",
-  },
-];
+const shots = featuredProducts.slice(0, 3).map((product, index) => ({
+  src: product.imageGallery?.[0] ?? product.imageFront,
+  label: ["Editorial privado", "Silhueta em movimento", "Detalhe de construção"][index] ?? "Frame MSY",
+  name: product.name,
+}));
 
 export function LookbookTeaser() {
   return (
-    <section className="bg-bg py-32 md:py-40">
+    <section className="bg-bg py-24 md:py-32">
       <div className="container-edge">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end pb-12 border-b border-line"
-        >
+        <div className="grid gap-8 border-b border-line pb-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-end">
           <div>
-            <p className="label-tag mb-3">Lookbook · DROP 003</p>
-            <h2 className="display text-4xl md:text-6xl text-bone leading-[0.95]">
-              <span className="italic font-light text-fg">Vestido em</span>
-              <br />
-              silêncio.
+            <span className="section-kicker">Editorial da coleção</span>
+            <h2 className="display mt-5 text-4xl leading-[0.95] text-bone md:text-6xl">
+              Produto visto como símbolo.
             </h2>
           </div>
-          <Link
-            href="/lookbook"
-            className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.32em] text-bone hover:text-blood transition-colors"
-          >
-            Ver editorial completo
-            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </Link>
-        </motion.div>
+          <div className="lg:justify-self-end lg:text-right">
+            <p className="max-w-xl text-sm leading-relaxed text-fg-muted md:text-base">
+              O editorial da MSY não existe para preencher espaço. Ele existe para ampliar desejo, textura, postura e leitura de presença da coleção atual.
+            </p>
+            <Link
+              href={`/drops/${currentDrop.id}`}
+              className="mt-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.32em] text-bone hover:text-blood transition-colors"
+            >
+              Ver capítulo
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
 
-        <div className="grid gap-3 md:grid-cols-4 mt-12">
-          {shots.map((shot, i) => (
+        <div className="mt-10 grid gap-4 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
+          {shots.map((shot, index) => (
             <motion.figure
               key={shot.label}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{
-                duration: 0.9,
-                delay: i * 0.08,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className={`relative overflow-hidden bg-bg-2 border border-line group ${
-                shot.h === "tall" ? "aspect-[3/5]" : "aspect-[3/4] md:mt-12"
-              }`}
+              transition={{ duration: 0.75, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className={`panel-premium group rounded-[28px] overflow-hidden ${index === 0 ? "lg:row-span-2 min-h-[460px]" : "min-h-[220px]"}`}
             >
-              <Image
-                src={shot.src}
-                alt={shot.label}
-                fill
-                sizes="(min-width: 768px) 25vw, 50vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <figcaption className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-bone opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                <span className="font-mono text-[10px] uppercase tracking-[0.32em]">
-                  {shot.label}
-                </span>
-                <ArrowUpRight className="h-4 w-4" />
-              </figcaption>
+              <div className="relative h-full min-h-[220px]">
+                <Image
+                  src={shot.src}
+                  alt={shot.name}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/10 to-transparent" />
+                <figcaption className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-blood">{shot.label}</p>
+                  <p className="mt-3 text-lg text-bone md:text-xl">{shot.name}</p>
+                </figcaption>
+              </div>
             </motion.figure>
           ))}
         </div>

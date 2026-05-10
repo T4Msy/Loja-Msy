@@ -5,19 +5,18 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const isSupabaseConfigured = SUPABASE_URL.startsWith("https://") && SUPABASE_ANON_KEY.length > 20;
 
 export async function middleware(request: NextRequest) {
-  // If Supabase is not configured, skip auth checks — let everything through
+  const { pathname } = request.nextUrl;
+
   if (!isSupabaseConfigured) {
-    // Still protect /admin by redirecting to login (which will work in demo mode)
-    const { pathname } = request.nextUrl;
     if (pathname.startsWith("/admin")) {
-      // In demo mode without Supabase, redirect admin to home
-      // Admin pages handle their own client-side auth check
-      return NextResponse.next();
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
     }
+
     return NextResponse.next();
   }
 
-  // Supabase is configured — full auth middleware
   const { createServerClient } = await import("@supabase/ssr");
 
   let supabaseResponse = NextResponse.next({ request });
@@ -41,13 +40,25 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
+  if (pathname.startsWith("/admin")) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
 
-  if (pathname.startsWith("/admin") && (!user || user.user_metadata?.role !== "admin")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(url);
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profile?.role !== "admin") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;

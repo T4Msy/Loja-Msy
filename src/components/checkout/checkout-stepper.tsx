@@ -15,8 +15,9 @@ export function CheckoutStepper({ current }: { current: number }) {
   return (
     <ol className="flex items-center gap-3 md:gap-6">
       {steps.map((s, i) => {
-        const done = i < current;
-        const active = i === current;
+        const stepNumber = i + 1;
+        const done = stepNumber < current;
+        const active = stepNumber === current;
         return (
           <li key={s.id} className="flex items-center gap-3">
             <motion.div

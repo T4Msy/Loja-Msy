@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
 import { cn, formatBRL, padNumber } from "@/lib/utils";
-import { Eye } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 type Props = {
   product: Product;
@@ -30,6 +30,7 @@ export function ProductCard({
   const isSoldOut = product.status === "sold-out" || totalStock === 0;
   const isLowStock = !isSoldOut && totalStock <= 8;
   const hasDiscount = product.comparePriceCents && product.comparePriceCents > product.priceCents;
+  const previewImage = hovered && !reduced ? product.imageHover ?? product.imageBack : product.imageFront;
 
   return (
     <motion.article
@@ -39,32 +40,24 @@ export function ProductCard({
       transition={{ duration: 0.7, delay: Math.min(index * 0.05, 0.4), ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={cn(
-        "group relative",
-        size === "lg" && "lg:col-span-2"
-      )}
+      className={cn("group relative", size === "lg" && "lg:col-span-2")}
     >
       <Link
         href={`/produto/${product.slug}`}
         className="block focus:outline-none focus-visible:ring-1 focus-visible:ring-blood focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
       >
-        {/* Image */}
         <div className={cn(
-          "relative aspect-[4/5] overflow-hidden bg-bg-2 border border-line",
+          "panel-premium surface-elev-2 relative aspect-[4/5] overflow-hidden rounded-[30px] border border-white/8",
           isSoldOut && "opacity-90"
         )}>
-          {/* Front */}
           <motion.div
             className="absolute inset-0"
             initial={false}
-            animate={{
-              opacity: hovered && !reduced ? 0 : 1,
-              scale: hovered && !reduced ? 1.02 : 1,
-            }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            animate={{ scale: hovered && !reduced ? 1.03 : 1 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Image
-              src={product.imageFront}
+              src={previewImage}
               alt={product.name}
               fill
               priority={priority}
@@ -73,98 +66,68 @@ export function ProductCard({
             />
           </motion.div>
 
-          {/* Back / Hover image */}
-          <motion.div
-            className="absolute inset-0"
-            initial={false}
-            animate={{
-              opacity: hovered && !reduced ? 1 : 0,
-              scale: hovered && !reduced ? 1 : 1.04,
-            }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Image
-              src={product.imageHover ?? product.imageBack}
-              alt={`${product.name} — verso`}
-              fill
-              sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
-              className="object-cover"
-            />
-          </motion.div>
+          <div className="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent" />
 
-          {/* Top tags */}
-          <div className="absolute left-3 top-3 flex flex-col gap-1.5 z-10">
+          <div className="absolute left-4 top-4 z-10 flex flex-col gap-2">
             {product.badges?.map((b) => (
               <BadgeTag key={b} type={b} />
             ))}
           </div>
 
-          {/* Position number */}
-          <p className="absolute right-3 top-3 z-10 font-mono text-[10px] uppercase tracking-[0.32em] text-fg-muted">
-            № {padNumber(product.position ?? index + 1, 2)}
+          <p className="absolute right-4 top-4 z-10 rounded-full border border-white/8 bg-black/30 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted backdrop-blur-md">
+            Nº {padNumber(product.position ?? index + 1, 2)}
           </p>
 
-          {/* Sold out overlay */}
           {isSoldOut && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-bg/70 backdrop-blur-[1px]">
-              <div className="flex flex-col items-center gap-2 border border-line-2 px-6 py-3 bg-bg/90">
-                <p className="seal text-blood text-3xl">完売</p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-bone">
-                  Sold Out
-                </p>
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-bg/72 backdrop-blur-sm">
+              <div className="rounded-[22px] border border-white/10 bg-black/45 px-6 py-4 text-center">
+                <p className="seal text-3xl text-blood">完売</p>
+                <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.4em] text-bone">Sold out</p>
               </div>
             </div>
           )}
 
-          {/* Hover scrim + quick add */}
           {!isSoldOut && showQuickAdd && (
             <motion.div
               initial={false}
-              animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 10 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-x-3 bottom-3 z-10"
+              animate={{ opacity: hovered || reduced ? 1 : 0, y: hovered || reduced ? 0 : 12 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-x-4 bottom-4 z-10"
             >
-              <div className="flex items-center gap-2">
-                <span className="flex-1 inline-flex items-center justify-center gap-2 h-11 bg-bg/85 border border-line-2 backdrop-blur-md font-mono text-[10px] uppercase tracking-[0.32em] text-bone group-hover:bg-blood-3 group-hover:border-blood transition-colors">
-                  <Eye className="h-3.5 w-3.5" />
-                  Ver peça
-                </span>
+              <div className="glass-blood rounded-full px-4 py-3 text-bone shadow-blood">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.32em]">Ver produto</span>
+                  <ArrowUpRight className="h-4 w-4" />
+                </div>
               </div>
             </motion.div>
           )}
-
-          {/* Bottom hairline animation */}
-          <span
-            aria-hidden
-            className="absolute inset-x-0 bottom-0 h-px bg-blood transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] origin-left scale-x-0 group-hover:scale-x-100"
-          />
         </div>
 
-        {/* Meta */}
-        <div className="mt-4 flex items-start justify-between gap-3">
+        <div className="mt-5 flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             {product.drop && (
-              <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-blood">
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-blood">
                 {product.drop.code}
               </p>
             )}
-            <h3 className="mt-1 text-[13px] uppercase tracking-wide text-bone group-hover:text-blood transition-colors line-clamp-1">
+            <h3 className="mt-2 text-sm uppercase tracking-[0.12em] text-bone transition-colors group-hover:text-blood md:text-[15px]">
               {product.name}
             </h3>
-            <p className="mt-1 text-xs text-fg-muted line-clamp-1">{product.subtitle}</p>
+            <p className="mt-2 text-sm leading-relaxed text-fg-muted">{product.subtitle}</p>
+            {isLowStock && (
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.32em] text-blood">
+                Últimas peças disponíveis
+              </p>
+            )}
           </div>
-          <div className="text-right shrink-0">
-            <p className="font-mono text-sm text-bone tabular-nums">
+          <div className="shrink-0 text-right">
+            <p className="font-mono text-base text-bone tabular-nums md:text-lg">
               {formatBRL(product.priceCents)}
             </p>
             {hasDiscount && (
-              <p className="font-mono text-[10px] text-fg-faint line-through tabular-nums">
+              <p className="mt-1 font-mono text-[11px] text-fg-faint line-through tabular-nums">
                 {formatBRL(product.comparePriceCents!)}
-              </p>
-            )}
-            {isLowStock && (
-              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.32em] text-blood">
-                Últimas peças
               </p>
             )}
           </div>
@@ -176,16 +139,16 @@ export function ProductCard({
 
 function BadgeTag({ type }: { type: NonNullable<Product["badges"]>[number] }) {
   const labels: Record<typeof type, { label: string; cls: string }> = {
-    limited: { label: "Limited", cls: "bg-bg/85 border border-line-2 text-bone" },
-    new: { label: "New", cls: "bg-blood-3 border border-blood-2 text-bone" },
-    "last-units": { label: "Últimas", cls: "bg-bg/85 border border-blood-2 text-blood" },
+    limited: { label: "Limited", cls: "bg-black/35 border border-white/10 text-bone" },
+    new: { label: "Novo", cls: "bg-blood-3 border border-blood text-bone" },
+    "last-units": { label: "Últimas", cls: "bg-black/35 border border-blood/50 text-blood" },
     exclusive: { label: "Exclusive", cls: "bg-bone text-bg border border-bone" },
-    archive: { label: "Archive", cls: "bg-bg/85 border border-line-2 text-fg-muted" },
+    archive: { label: "Archive", cls: "bg-black/35 border border-white/10 text-fg-muted" },
   };
   const meta = labels[type];
   return (
     <span className={cn(
-      "inline-flex items-center px-2 py-1 font-mono text-[9px] uppercase tracking-[0.32em] backdrop-blur-md",
+      "inline-flex items-center rounded-full px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.28em] backdrop-blur-md",
       meta.cls
     )}>
       {meta.label}
